@@ -64,6 +64,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.om.IOverlayManager;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -286,6 +287,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
 
     private static final String FORCE_SHOW_NAVBAR =
             "lineagesystem:" + LineageSettings.System.FORCE_SHOW_NAVBAR;
+
+    private static final String DISPLAY_CUTOUT_HIDDEN =
+            "system:" + Settings.System.DISPLAY_CUTOUT_HIDDEN;
 
     private static final String BANNER_ACTION_CANCEL =
             "com.android.systemui.statusbar.banner_action_cancel";
@@ -648,6 +652,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
     protected final BatteryController mBatteryController;
     protected boolean mPanelExpanded;
+    private IOverlayManager mOverlayManager;
     private UiModeManager mUiModeManager;
     private LogMaker mStatusBarStateLog;
     protected final NotificationIconAreaController mNotificationIconAreaController;
@@ -682,6 +687,9 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         }
         onBackPressed();
     };
+
+    private boolean mDisplayCutoutHidden;
+    private Handler mRefreshNavbarHandler;
 
     /**
      * Public constructor for CentralSurfaces.
@@ -783,7 +791,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
             AlternateBouncerInteractor alternateBouncerInteractor,
             UserTracker userTracker,
             Provider<FingerprintManager> fingerprintManager,
-            TunerService tunerService
+            TunerService tunerService,
+            @Main Handler refreshNavbarHandler
     ) {
         mContext = context;
         mNotificationsController = notificationsController;
@@ -871,6 +880,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         mStartingSurfaceOptional = startingSurfaceOptional;
         mDreamManager = dreamManager;
         mTunerService = tunerService;
+        mRefreshNavbarHandler = refreshNavbarHandler;
         lockscreenShadeTransitionController.setCentralSurfaces(this);
         statusBarWindowStateController.addListener(this::onStatusBarWindowStateChanged);
 
@@ -916,6 +926,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     public void start() {
         mScreenLifecycle.addObserver(mScreenObserver);
         mWakefulnessLifecycle.addObserver(mWakefulnessObserver);
+        mOverlayManager = IOverlayManager.Stub.asInterface(
+                ServiceManager.getService(Context.OVERLAY_SERVICE));
         mUiModeManager = mContext.getSystemService(UiModeManager.class);
         if (mBubblesOptional.isPresent()) {
             mBubblesOptional.get().setExpandListener(mBubbleExpandListener);
@@ -943,6 +955,7 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
         }
 
         mTunerService.addTunable(this, FORCE_SHOW_NAVBAR);
+        mTunerService.addTunable(this, DISPLAY_CUTOUT_HIDDEN);
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 
@@ -2017,6 +2030,36 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
     @Override
     public void setBarStateForTest(int state) {
         mState = state;
+    }
+
+    private void updateCutoutOverlay(boolean displayCutoutHidden) {
+        boolean needsRefresh = mDisplayCutoutHidden != displayCutoutHidden;
+        mDisplayCutoutHidden = displayCutoutHidden;
+        try {
+            mOverlayManager.setEnabled("id.plros.overlay.hidecutout",
+                        mDisplayCutoutHidden, mLockscreenUserManager.getCurrentUserId());
+        } catch (RemoteException ignored) {
+        }
+        if (needsRefresh){
+            refreshNavbarOverlay();
+        }
+    }
+
+    private void refreshNavbarOverlay() {
+        final String overlayPackageName = "id.plros.overlay.dummycutout";
+        try{
+            mOverlayManager.setEnabled(overlayPackageName,
+                false, UserHandle.USER_CURRENT);
+        } catch (RemoteException ignored) {
+        }
+        mRefreshNavbarHandler.removeCallbacksAndMessages(null);
+        mRefreshNavbarHandler.postDelayed(() -> {
+            try{
+                mOverlayManager.setEnabled(overlayPackageName,
+                    true, UserHandle.USER_CURRENT);
+            } catch (RemoteException ignored) {
+            }
+        }, 1000);
     }
 
     static class AnimateExpandSettingsPanelMessage {
@@ -4207,6 +4250,8 @@ public class CentralSurfacesImpl implements CoreStartable, CentralSurfaces, Tune
                     mNavigationBarController.onDisplayRemoved(mDisplayId);
                 }
             }
+        } else if (DISPLAY_CUTOUT_HIDDEN.equals(key)) {
+            updateCutoutOverlay(TunerService.parseIntegerSwitch(newValue, false));
         }
     }
 

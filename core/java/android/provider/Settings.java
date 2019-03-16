@@ -5609,6 +5609,12 @@ public final class Settings {
         public static final String NAVIGATION_BAR_IME_SPACE = "navigation_bar_ime_space";
 
         /**
+         * Display cutout
+         * @hide
+         */
+        public static final String DISPLAY_CUTOUT_HIDDEN = "display_cutout_hidden";
+
+        /**
          * Disable power menu on secure lock screen
          * @hide
          */
