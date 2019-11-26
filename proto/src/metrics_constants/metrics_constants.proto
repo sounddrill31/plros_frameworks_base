@@ -7445,5 +7445,10 @@ message MetricsEvent {
 
     // OPEN: Settings > Sound & vibration > Pulse
     PULSE_SETTINGS = 1937;
+
+    // OPEN: QS Data switch tile shown
+    // ACTION: QS Data switch tile tapped
+    // CATEGORY: QUICK_SETTINGS
+    QS_DATA_SWITCH = 1938;
   }
 }
