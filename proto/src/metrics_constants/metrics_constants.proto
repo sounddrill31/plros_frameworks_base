@@ -7442,5 +7442,8 @@ message MetricsEvent {
     // ACTION: QS Screenshot tile tapped
     // CATEGORY: QUICK_SETTINGS
     QS_SCREENSHOT = 1936;
+
+    // OPEN: Settings > Sound & vibration > Pulse
+    PULSE_SETTINGS = 1937;
   }
 }
