@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
      Copyright (C) 2023 Project Lineage Remix Open Source
-
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
-
           http://www.apache.org/licenses/LICENSE-2.0
-
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,20 +12,10 @@
      limitations under the License.
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <!-- Screenshot Tile -->
-    <string name="screenshot_long_press">Long press to region screenshot</string>
-
-    <!-- Screenshot Delete Toast -->
-    <string name="delete_screenshot_toast">Screenshot deleted</string>
-
-    <!-- Data usage info in QS footer -->
-    <string name="usage_data">used today</string>
-    <string name="usage_data_default_suffix">Data</string>
-    <string name="usage_wifi_default_suffix">Wi-Fi</string>
-
-    <!-- DataSwitch Tile -->
-    <string name="qs_data_switch_label">Switch mobile data SIM</string>
-
-    <!-- Sleep Mode Tile-->
-    <string name="quick_settings_sleep_mode_label">Sleep Mode</string>
+    <!-- Sleep Mode -->
+    <string name="notification_channel_sleep">Sleep Mode</string>
+    <string name="sleep_mode_notification_title">Sleep mode enabled</string>
+    <string name="sleep_mode_notification_content">Tap to turn off sleep mode</string>
+    <string name="sleep_mode_enabled_toast">Sleep mode turned on</string>
+    <string name="sleep_mode_disabled_toast">Sleep mode turned off</string>
 </resources>

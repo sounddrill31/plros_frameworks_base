@@ -7450,5 +7450,14 @@ message MetricsEvent {
     // ACTION: QS Data switch tile tapped
     // CATEGORY: QUICK_SETTINGS
     QS_DATA_SWITCH = 1938;
+
+    // OPEN: Settings > Battery > Sleep Mode
+    SLEEP_MODE = 1939;
+
+    // OPEN: QS Sleep Mode tile shown
+    // ACTION: QS Sleep Mode tile tapped
+    // SUBTYPE: 0 is off, 1 is on
+    // CATEGORY: QUICK_SETTINGS
+    QS_SLEEP_MODE = 1940;
   }
 }
