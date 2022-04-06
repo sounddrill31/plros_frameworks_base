@@ -25,4 +25,7 @@
 
     <!-- Name of a font family to use as light font. For theming purpose. -->
     <string name="config_lightFontFamily" translatable="false">sans-serif-light</string>
+
+    <!-- Whether to allow network traffic on statusbar -->
+    <bool name="config_supportsNetworkTrafficOnStatusBar">true</bool>
 </resources>
