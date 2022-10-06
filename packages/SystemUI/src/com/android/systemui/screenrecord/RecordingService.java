@@ -74,6 +74,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private static final String EXTRA_SHOW_TAPS = "extra_showTaps";
     private static final String EXTRA_CAPTURE_TARGET = "extra_captureTarget";
     private static final String EXTRA_LOW_QUALITY = "extra_lowQuality";
+    private final static String EXTRA_HEVC = "extra_HEVC";
 
     private static final String ACTION_START = "com.android.systemui.screenrecord.START";
     private static final String ACTION_STOP = "com.android.systemui.screenrecord.STOP";
@@ -97,6 +98,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private final NotificationManager mNotificationManager;
     private final UserContextProvider mUserContextTracker;
 
+    private boolean mHEVC;
     private boolean mLowQuality;
 
     @Inject
@@ -129,14 +131,15 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     public static Intent getStartIntent(Context context, int resultCode,
             int audioSource, boolean showTaps,
             @Nullable MediaProjectionCaptureTarget captureTarget,
-            boolean lowQuality) {
+            boolean lowQuality, boolean hevc) {
         return new Intent(context, RecordingService.class)
                 .setAction(ACTION_START)
                 .putExtra(EXTRA_RESULT_CODE, resultCode)
                 .putExtra(EXTRA_AUDIO_SOURCE, audioSource)
                 .putExtra(EXTRA_SHOW_TAPS, showTaps)
                 .putExtra(EXTRA_CAPTURE_TARGET, captureTarget)
-                .putExtra(EXTRA_LOW_QUALITY, lowQuality);
+                .putExtra(EXTRA_LOW_QUALITY, lowQuality)
+                .putExtra(EXTRA_HEVC, hevc);
     }
 
     @Override
@@ -159,6 +162,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
                         intent.getParcelableExtra(EXTRA_CAPTURE_TARGET,
                                 MediaProjectionCaptureTarget.class);
                 mLowQuality = intent.getBooleanExtra(EXTRA_LOW_QUALITY, false);
+                mHEVC = intent.getBooleanExtra(EXTRA_HEVC, true);
 
                 mOriginalShowTaps = Settings.System.getInt(
                         getApplicationContext().getContentResolver(),
@@ -175,6 +179,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
                         this
                 );
                 setLowQuality(mLowQuality);
+                setHEVC(mHEVC);
 
                 if (startRecording()) {
                     updateState(true);
@@ -510,6 +515,12 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private void setLowQuality(boolean turnOn) {
         if (getRecorder() != null) {
             getRecorder().setLowQuality(turnOn);
+        }
+    }
+
+    private void setHEVC(boolean hevc) {
+        if (getRecorder() != null) {
+            getRecorder().setHEVC(hevc);
         }
     }
 
