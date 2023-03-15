@@ -60,6 +60,8 @@ class ScreenRecordPermissionDialog(
     private lateinit var tapsView: View
     private lateinit var audioSwitch: Switch
     private lateinit var options: Spinner
+    private lateinit var lowQualitySwitch: Switch
+    private lateinit var hevcSwitch: Switch
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setDialogTitle(R.string.screenrecord_start_label)
@@ -104,6 +106,8 @@ class ScreenRecordPermissionDialog(
         tapsView = findViewById(R.id.show_taps)
         updateTapsViewVisibility()
         options = findViewById(R.id.screen_recording_options)
+        lowQualitySwitch = findViewById(R.id.screenrecord_lowquality_switch)
+        hevcSwitch = findViewById(R.id.screenrecord_hevc_switch)
         val a: ArrayAdapter<*> =
             ScreenRecordingAdapter(context, android.R.layout.simple_spinner_dropdown_item, MODES)
         a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -134,6 +138,8 @@ class ScreenRecordPermissionDialog(
         val audioMode =
             if (audioSwitch.isChecked) options.selectedItem as ScreenRecordingAudioSource
             else ScreenRecordingAudioSource.NONE
+        val lowQuality = lowQualitySwitch.isChecked
+        val hevc = hevcSwitch.isChecked
         val startIntent =
             PendingIntent.getForegroundService(
                 userContext,
@@ -143,7 +149,9 @@ class ScreenRecordPermissionDialog(
                     Activity.RESULT_OK,
                     audioMode.ordinal,
                     showTaps,
-                    captureTarget
+                    captureTarget,
+                    lowQuality,
+                    hevc
                 ),
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
