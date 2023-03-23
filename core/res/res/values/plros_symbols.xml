@@ -26,7 +26,4 @@
 
     <!-- For dynamic default font styles -->
     <java-symbol type="string" name="config_bodyFontFamily" />
-
-    <!-- Whether to allow network traffic on statusbar -->
-    <java-symbol type="bool" name="config_supportsNetworkTrafficOnStatusBar" />
 </resources>
