@@ -107,8 +107,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             "lineagesecure:" + LineageSettings.Secure.LOCKSCREEN_MEDIA_METADATA;
     private static final String LOCKSCREEN_ALBUMART_FILTER =
             "system:" + Settings.System.LOCKSCREEN_ALBUMART_FILTER;
-    private static final String LS_MEDIA_FILTER_BLUR_RADIUS =
-            "system:" + Settings.System.LS_MEDIA_FILTER_BLUR_RADIUS;
 
     private final StatusBarStateController mStatusBarStateController;
     private final SysuiColorExtractor mColorExtractor;
@@ -167,7 +165,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
     private LockscreenWallpaper.WallpaperDrawable mWallapperDrawable;
 
     private boolean mShowMediaMetadata;
-    private boolean mShouldBlur;
     private int mAlbumArtFilter;
 
     private final MediaController.Callback mMediaListener = new MediaController.Callback() {
@@ -241,7 +238,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
         mTunerService = tunerService;
         mTunerService.addTunable(this, LOCKSCREEN_MEDIA_METADATA);
         mTunerService.addTunable(this, LOCKSCREEN_ALBUMART_FILTER);
-        tunerService.addTunable(this, LS_MEDIA_FILTER_BLUR_RADIUS);
     }
 
     @Override
@@ -255,12 +251,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
             case LOCKSCREEN_ALBUMART_FILTER:
                 mAlbumArtFilter =
                         TunerService.parseInteger(newValue, 0);
-                dispatchUpdateMediaMetaData(false /* changed */, true /* allowAnimation */);
-                mShouldBlur = mAlbumArtFilter >= 3;
-                break;
-            case LS_MEDIA_FILTER_BLUR_RADIUS:
-                mLSBlurRadius =
-                        (float) TunerService.parseInteger(newValue, 125);
                 dispatchUpdateMediaMetaData(false /* changed */, true /* allowAnimation */);
                 break;
             default:
@@ -646,7 +636,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
                 PlaybackState.STATE_PLAYING == getMediaControllerPlaybackState(mMediaController)) {
             switch (mAlbumArtFilter) {
                 case 0:
-                case 3:
                 default:
                     artworkDrawable = new BitmapDrawable(mBackdropBack.getResources(), bmp);
                     break;
@@ -658,10 +647,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
                     Drawable aw = new BitmapDrawable(mBackdropBack.getResources(), bmp);
                     artworkDrawable = new BitmapDrawable(ImageHelper.getColoredBitmap(aw,
                         mContext.getResources().getColor(R.color.accent_device_default_light)));
-                    break;
-                case 4:
-                    artworkDrawable = new BitmapDrawable(mBackdropBack.getResources(),
-                        ImageHelper.toGrayscale(bmp));
                     break;
             }
         }
@@ -738,11 +723,6 @@ public class NotificationMediaManager implements Dumpable, TunerService.Tunable 
                                 (LockscreenWallpaper.WallpaperDrawable) artworkDrawable;
                     }
                     mBackdropBack.setImageDrawable(artworkDrawable);
-                }
-
-
-		if (mShouldBlur) {
-                    mBackdropBack.setRenderEffect(RenderEffect.createBlurEffect(mLSBlurRadius,mLSBlurRadius,Shader.TileMode.MIRROR));
                 }
 
                 if (mBackdropFront.getVisibility() == View.VISIBLE) {
