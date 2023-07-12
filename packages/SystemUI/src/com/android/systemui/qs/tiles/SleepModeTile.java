@@ -61,6 +61,8 @@ public class SleepModeTile extends QSTileImpl<QSTile.BooleanState> {
     private static final Intent SLEEP_MODE_SETTINGS =
             new Intent().setComponent(SLEEP_MODE_SETTING_COMPONENT);
 
+    public static final String TILE_SPEC = "sleep_mode";
+
     private final Icon mIcon = ResourceIcon.get(com.android.internal.R.drawable.ic_sleep);
 
     private final SettingObserver mSetting;
