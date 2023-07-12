@@ -298,7 +298,6 @@ constructor(
         clock.setOnClickListener(this)
         date.setOnClickListener(this)
         setBatteryClickable(true)
-        setNetworkTrafficVisible(false)
     }
 
     override fun onClick(v: View) {
