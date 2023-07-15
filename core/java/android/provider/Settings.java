@@ -5595,6 +5595,12 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_UNIT_TYPE = "network_traffic_unit_type";
 
         /**
+         * QS footer data usage
+         * @hide
+         */
+        public static final String SYS_QS_FOOTER_DATA_USAGE = "sys_qs_footer_data_usage";
+
+        /**
          * Keys we no longer back up under the current schema, but want to continue to
          * process when restoring historical backup datasets.
          *
