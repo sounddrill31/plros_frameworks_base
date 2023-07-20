@@ -7459,5 +7459,8 @@ message MetricsEvent {
     // SUBTYPE: 0 is off, 1 is on
     // CATEGORY: QUICK_SETTINGS
     QS_SLEEP_MODE = 1940;
+
+    // OPEN: Settings > System > Status bar > Network traffic monitor
+    NETWORK_TRAFFIC = 1941;
   }
 }
