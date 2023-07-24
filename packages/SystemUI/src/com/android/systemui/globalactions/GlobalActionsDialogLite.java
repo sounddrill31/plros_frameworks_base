@@ -850,7 +850,9 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
     }
 
     private boolean rebootAction(boolean safeMode, String reason) {
-        if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing()) {
+       boolean disablereboot = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.USE_POWER_MENU_ON_SECURE_KEYGUARD, 1) == 0;
+        if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing() && !disablereboot) {
             mActivityStarter.postQSRunnableDismissingKeyguard(() -> {
                 mWindowManagerFuncs.reboot(safeMode, reason);
             });
@@ -925,8 +927,10 @@ public class GlobalActionsDialogLite implements DialogInterface.OnDismissListene
         @Override
         public void onPress() {
             mUiEventLogger.log(GlobalActionsEvent.GA_SHUTDOWN_PRESS);
+            boolean disableshutdown = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.USE_POWER_MENU_ON_SECURE_KEYGUARD, 1) == 0;
             // shutdown by making sure radio and power are handled accordingly.
-            if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing()) {
+            if (mKeyguardStateController.isMethodSecure() && mKeyguardStateController.isShowing() && !disableshutdown) {
                   mActivityStarter.postQSRunnableDismissingKeyguard(() -> {
                     mWindowManagerFuncs.shutdown();
                 });
