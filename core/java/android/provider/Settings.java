@@ -11142,13 +11142,6 @@ public final class Settings {
         public static final String PULSE_SMOOTHING_ENABLED = "pulse_smoothing_enabled";
 
         /**
-         * Disable power menu on secure lock screens
-         *
-         * @hide
-         */
-        public static final String POWER_MENU_HIDE_ON_SECURE = "power_menu_hide_on_secure";
-
-        /**
          * Select from different navigation bar layouts
          * @hide
          */
