@@ -1397,8 +1397,6 @@ public class Typeface {
             setFinalField("DEFAULT", create(getSystemDefaultTypeface(familyName), 0));
             setFinalField("DEFAULT_BOLD", create(getSystemDefaultTypeface(familyName), Typeface.BOLD));
             setFinalField("SANS_SERIF", create(familyName, 0));
-            setFinalField("SERIF", create(familyName, 0));
-            setFinalField("MONOSPACE", create(familyName, 0));
 
             // For default aliases used in framework styles
             sSystemFontOverrides.put("sans-serif", typeface);
@@ -1406,9 +1404,6 @@ public class Typeface {
             sSystemFontOverrides.put("sans-serif-light", create(typeface, 300, false));
             sSystemFontOverrides.put("sans-serif-medium", create(typeface, 500, false));
             sSystemFontOverrides.put("sans-serif-black", create(typeface, 900, false));
-            sSystemFontOverrides.put("sans-serif-condensed", typeface);
-            sSystemFontOverrides.put("sans-serif-condensed-light", create(typeface, 300, false));
-            sSystemFontOverrides.put("sans-serif-condensed-medium", create(typeface, 500, false));
             sSystemFontOverrides.put("google-sans", typeface);
             sSystemFontOverrides.put("google-sans-thin", create(typeface, 100, false));
             sSystemFontOverrides.put("google-sans-light", create(typeface, 300, false));
