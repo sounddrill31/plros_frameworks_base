@@ -1407,9 +1407,15 @@ public class Typeface {
             sSystemFontOverrides.put("google-sans", typeface);
             sSystemFontOverrides.put("google-sans-thin", create(typeface, 100, false));
             sSystemFontOverrides.put("google-sans-light", create(typeface, 300, false));
-            sSystemFontOverrides.put("google-sans-text", create(typeface, 400, false));
             sSystemFontOverrides.put("google-sans-medium", create(typeface, 500, false));
             sSystemFontOverrides.put("google-sans-bold", create(typeface, 900, false));
+            sSystemFontOverrides.put("google-sans-text", typeface);
+            sSystemFontOverrides.put("google-sans-text-thin", create(typeface, 100, false));
+            sSystemFontOverrides.put("google-sans-text-light", create(typeface, 300, false));
+            sSystemFontOverrides.put("google-sans-text-medium", create(typeface, 500, false));
+            sSystemFontOverrides.put("google-sans-text-bold", create(typeface, 900, false));
+            sSystemFontOverrides.put("google-sans-display", typeface);
+
 
             setPublicDefaults(familyName);
         }
