@@ -73,6 +73,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private static final String EXTRA_AUDIO_SOURCE = "extra_useAudio";
     private static final String EXTRA_SHOW_TAPS = "extra_showTaps";
     private static final String EXTRA_CAPTURE_TARGET = "extra_captureTarget";
+    private static final String EXTRA_LOW_QUALITY = "extra_lowQuality";
 
     private static final String ACTION_START = "com.android.systemui.screenrecord.START";
     private static final String ACTION_STOP = "com.android.systemui.screenrecord.STOP";
@@ -95,6 +96,8 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private final UiEventLogger mUiEventLogger;
     private final NotificationManager mNotificationManager;
     private final UserContextProvider mUserContextTracker;
+
+    private boolean mLowQuality;
 
     @Inject
     public RecordingService(RecordingController controller, @LongRunning Executor executor,
@@ -125,13 +128,15 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
      */
     public static Intent getStartIntent(Context context, int resultCode,
             int audioSource, boolean showTaps,
-            @Nullable MediaProjectionCaptureTarget captureTarget) {
+            @Nullable MediaProjectionCaptureTarget captureTarget,
+            boolean lowQuality) {
         return new Intent(context, RecordingService.class)
                 .setAction(ACTION_START)
                 .putExtra(EXTRA_RESULT_CODE, resultCode)
                 .putExtra(EXTRA_AUDIO_SOURCE, audioSource)
                 .putExtra(EXTRA_SHOW_TAPS, showTaps)
-                .putExtra(EXTRA_CAPTURE_TARGET, captureTarget);
+                .putExtra(EXTRA_CAPTURE_TARGET, captureTarget)
+                .putExtra(EXTRA_LOW_QUALITY, lowQuality);
     }
 
     @Override
@@ -153,6 +158,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
                 MediaProjectionCaptureTarget captureTarget =
                         intent.getParcelableExtra(EXTRA_CAPTURE_TARGET,
                                 MediaProjectionCaptureTarget.class);
+                mLowQuality = intent.getBooleanExtra(EXTRA_LOW_QUALITY, false);
 
                 mOriginalShowTaps = Settings.System.getInt(
                         getApplicationContext().getContentResolver(),
@@ -168,6 +174,7 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
                         captureTarget,
                         this
                 );
+                setLowQuality(mLowQuality);
 
                 if (startRecording()) {
                     updateState(true);
@@ -498,6 +505,12 @@ public class RecordingService extends Service implements ScreenMediaRecorderList
     private void setTapsVisible(boolean turnOn) {
         int value = turnOn ? 1 : 0;
         Settings.System.putInt(getContentResolver(), Settings.System.SHOW_TOUCHES, value);
+    }
+
+    private void setLowQuality(boolean turnOn) {
+        if (getRecorder() != null) {
+            getRecorder().setLowQuality(turnOn);
+        }
     }
 
     /**
