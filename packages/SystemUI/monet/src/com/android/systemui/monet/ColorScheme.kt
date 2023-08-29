@@ -224,9 +224,10 @@ class TonalPalette {
     val allShadesMapped: Map<Int, Int>
     val baseColor: Int
 
-    internal constructor(spec: TonalSpec, seedColor: Int) {
+    internal constructor(spec: TonalSpec, seedColor: Int, 
+            luminanceFactor: Float = 1f, chromaFactor: Float = 1f) {
         val seedCam = Cam.fromInt(seedColor)
-        allShades = spec.shades(seedCam)
+        allShades = spec.shades(seedCam, luminanceFactor, chromaFactor)
         allShadesMapped = shadeKeys.zip(allShades).toMap()
 
         val h = spec.hue.get(seedCam).toFloat()
@@ -333,14 +334,13 @@ class ColorScheme(
             bgSeed
         }
 
-        accent1 = style.coreSpec.a1.shades(camSeed, luminanceFactor, chromaFactor)
-        accent2 = style.coreSpec.a2.shades(camSeed)
-        accent3 = style.coreSpec.a3.shades(camSeed)
-        val camBgSeed = Cam.fromInt(bgSeedArgb)
-        neutral1 = style.coreSpec.n1.shades(camBgSeed,
+        accent1 = TonalPalette(style.coreSpec.a1, seedArgb, luminanceFactor, chromaFactor)
+        accent2 = TonalPalette(style.coreSpec.a2, seedArgb)
+        accent3 = TonalPalette(style.coreSpec.a3, seedArgb)
+        neutral1 = TonalPalette(style.coreSpec.n1, bgSeedArgb,
                 if (tintBackground) luminanceFactor else 1f,
                 if (tintBackground) chromaFactor else 1f)
-        neutral2 = style.coreSpec.n2.shades(camBgSeed)
+        neutral2 = TonalPalette(style.coreSpec.n2, bgSeedArgb)
     }
 
     val shadeCount get() = this.accent1.allShades.size
