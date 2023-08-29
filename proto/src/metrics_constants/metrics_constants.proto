@@ -7462,5 +7462,8 @@ message MetricsEvent {
 
     // OPEN: Settings > System > Status bar > Network traffic monitor
     NETWORK_TRAFFIC = 1941;
+
+    // OPEN: Settings > Display > Color theme
+    MONET_SETTINGS = 1942;
   }
 }
