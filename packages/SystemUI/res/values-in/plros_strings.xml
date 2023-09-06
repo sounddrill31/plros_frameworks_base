@@ -22,7 +22,7 @@
     <string name="delete_screenshot_toast">Screenshot dihapus</string>
 
     <!-- DataSwitch Tile -->
-    <string name="qs_data_switch_label">Ganti SIM data seluler</string>
+    <string name="qs_data_switch_label">Tukar SIM data seluler</string>
 
     <!-- Sleep Mode Tile-->
     <string name="quick_settings_sleep_mode_label">Mode Tidur</string>
