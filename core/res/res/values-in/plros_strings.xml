@@ -22,5 +22,9 @@
     <!-- Title of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permgrouplab_otherSensors">Sensor</string>
     <!-- Description of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
-    <string name="permgroupdesc_otherSensors">mengakses data sensor seperti orientasi, pergerakan dan lain-lain.</string>
+    <string name="permgroupdesc_otherSensors">mengakses data sensor seperti orientasi, pergerakan dan lain-lain</string>
+    <!-- Title of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
+    <string name="permgrouplab_fake_package_signature">Samaran tanda tangan paket</string>
+    <!-- Description of a category of application permissions, listed so the user can choose whether they want to allow the application to do this. -->
+    <string name="permgroupdesc_fake_package_signature">berperilaku sebagai aplikasi lain</string>
 </resources>
