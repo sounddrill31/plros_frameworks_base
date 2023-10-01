@@ -28,9 +28,6 @@ import android.os.Parcel;
 import android.text.ParcelableSpan;
 import android.text.TextPaint;
 import android.text.TextUtils;
-import android.util.PackageUtils;
-
-import com.android.internal.graphics.fonts.DynamicMetrics;
 
 /**
  * Sets the text appearance using the given
@@ -490,18 +487,17 @@ public class TextAppearanceSpan extends MetricAffectingSpan implements Parcelabl
             styledTypeface = null;
         }
 
-        Typeface finalTypeface = null;
-        Context ctx = null;
         if (styledTypeface != null) {
+            final Typeface readyTypeface;
             if (mTextFontWeight >= 0) {
                 final int weight = Math.min(FontStyle.FONT_WEIGHT_MAX, mTextFontWeight);
                 final boolean italic = (style & Typeface.ITALIC) != 0;
-                finalTypeface = ds.setTypeface(Typeface.create(styledTypeface, weight, italic));
+                readyTypeface = ds.setTypeface(Typeface.create(styledTypeface, weight, italic));
             } else {
-                finalTypeface = styledTypeface;
+                readyTypeface = styledTypeface;
             }
 
-            int fake = style & ~finalTypeface.getStyle();
+            int fake = style & ~readyTypeface.getStyle();
 
             if ((fake & Typeface.BOLD) != 0) {
                 ds.setFakeBoldText(true);
@@ -511,7 +507,7 @@ public class TextAppearanceSpan extends MetricAffectingSpan implements Parcelabl
                 ds.setTextSkewX(-0.25f);
             }
 
-            ds.setTypeface(finalTypeface);
+            ds.setTypeface(readyTypeface);
         }
 
         if (mTextSize > 0) {
@@ -528,12 +524,6 @@ public class TextAppearanceSpan extends MetricAffectingSpan implements Parcelabl
 
         if (mHasLetterSpacing) {
             ds.setLetterSpacing(mLetterSpacing);
-        }
-
-        if ((!mHasLetterSpacing || mLetterSpacing == 0.0f) &&
-                mTextSize > 0 && finalTypeface != null &&
-                finalTypeface.isSystemFont() && PackageUtils.isDynamicMetricsSupportedApps(ctx)) {
-            ds.setLetterSpacing(DynamicMetrics.calcTracking(mTextSize));
         }
 
         if (mFontFeatureSettings != null) {

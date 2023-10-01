@@ -252,11 +252,6 @@ public final class PackageUtils {
         }
     }
 
-    public static boolean isDynamicMetricsSupportedApps(Context ctx) {
-        String packageName = ctx.getPackageName();
-        return !packageName.equals("com.facebook.katana");
-    }
-
     public static String[] filterNonSystemPackages(Context ctx, String[] pkgs) {
         return filterNonSystemPackagesL(ctx, pkgs).toArray(EmptyArray.STRING);
     }
