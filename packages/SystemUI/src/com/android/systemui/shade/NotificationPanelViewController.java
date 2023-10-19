@@ -4522,7 +4522,9 @@ public final class NotificationPanelViewController implements Dumpable {
         @Override
         public void onTuningChanged(String key, String newValue) {
             if (DOUBLE_TAP_SLEEP_GESTURE.equals(key)) {
-                mDoubleTapToSleepEnabled = TunerService.parseIntegerSwitch(newValue, true);
+                mDoubleTapToSleepEnabled = TunerService.parseIntegerSwitch(newValue,
+                        mResources.getBoolean(org.lineageos.platform.internal.R.bool.
+                                config_dt2sGestureEnabledByDefault));
             }
         }
     }
