@@ -263,7 +263,7 @@ public class PropImitationHooks {
         return has;
     }
 
-    pubzzlic static boolean hasSystemFeature(String name, boolean has) {
+    public static boolean hasSystemFeature(String name, boolean has) {
         if (sIsPhotos) {
             if (has && sPixelFeatures.stream().anyMatch(name::contains)) {
                 dlog("Blocked system feature " + name + " for Google Photos");
