@@ -262,19 +262,6 @@ public class PropImitationHooks {
         return has;
     }
 
-    public static boolean hasSystemFeature(String name, boolean has) {
-        if (sIsPhotos) {
-            if (has && sPixelFeatures.stream().anyMatch(name::contains)) {
-                dlog("Blocked system feature " + name + " for Google Photos");
-                has = false;
-            } else if (!has && name.equalsIgnoreCase(FEATURE_NEXUS_PRELOAD)) {
-                dlog("Enabled system feature " + name + " for Google Photos");
-                has = true;
-            }
-        }
-        return has;
-    }
-
     private static void dlog(String msg) {
         if (DEBUG) Log.d(TAG, "[" + sProcessName + "] " + msg);
     }
